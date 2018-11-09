@@ -15,6 +15,7 @@
 // Imports
 const Lang = imports.lang;
 const Main = imports.ui.main;
+const Meta = imports.gi.Meta;
 const St = imports.gi.St;
 const Tweener = imports.ui.tweener;
 const Slider = imports.ui.slider;
@@ -457,7 +458,7 @@ const CWindowCornerPreview = new Lang.Class({
 
         let posX, posY;
 
-        let rectMonitor = Main.layoutManager.getWorkAreaForMonitor(global.screen.get_current_monitor());
+        let rectMonitor = Main.layoutManager.getWorkAreaForMonitor(DisplayWrapper.getScreen().get_current_monitor());
 
         let rectChrome = {
             x1: rectMonitor.x,
@@ -531,7 +532,7 @@ const CWindowCornerPreview = new Lang.Class({
 
         // To mantain a similar thumbnail size whenever the user selects a different window to preview,
         // instead of zooming out based on the window size itself, it takes the window screen as a standard unit (= 100%)
-        let rectMonitor = Main.layoutManager.getWorkAreaForMonitor(global.screen.get_current_monitor());
+        let rectMonitor = Main.layoutManager.getWorkAreaForMonitor(DisplayWrapper.getScreen().get_current_monitor());
         let targetRatio = rectMonitor.width * this.zoom / windowWidth;
 
         // No magnification allowed (KNOWN ISSUE: there's no height control if used, it still needs optimizing)
@@ -689,7 +690,7 @@ const CWindowCornerPreview = new Lang.Class({
         this._environmentSignals.tryConnect(Main.overview, "showing", Lang.bind(this, this._onOverviewShowing));
         this._environmentSignals.tryConnect(Main.overview, "hiding", Lang.bind(this, this._onOverviewHiding));
         this._environmentSignals.tryConnect(global.display, "notify::focus-window", Lang.bind(this, this._onNotifyFocusWindow));
-        this._environmentSignals.tryConnect(global.screen, "monitors-changed", Lang.bind(this, this._onMonitorsChanged));
+        this._environmentSignals.tryConnect(DisplayWrapper.getMonitorManager(), "monitors-changed", Lang.bind(this, this._onMonitorsChanged));
 
 
         this._container = new St.Button({style_class: "window-corner-preview"});

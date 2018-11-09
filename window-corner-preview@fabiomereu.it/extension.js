@@ -21,6 +21,7 @@ const Slider = imports.ui.slider;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Clutter = imports.gi.Clutter;
+const Util = imports.misc.util;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -776,7 +777,7 @@ const CWindowCornerPreviewMenu = new Lang.Class({
     },
 
     _onSettings: function () {
-        Main.Util.trySpawnCommandLine("gnome-shell-extension-prefs window-corner-preview@fabiomereu.it");
+        Util.trySpawnCommandLine("gnome-shell-extension-prefs window-corner-preview@fabiomereu.it");
     },
 
     // Update windows list and other menus before menu pops up

@@ -11,8 +11,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Convenience = Me.imports.convenience;
 
-const SETTING_BEHAVIOR_MODE = "behavior-mode";
-const SETTING_FOCUS_HIDDEN = "focus-hidden";
+var SETTING_BEHAVIOR_MODE = "behavior-mode";
+var SETTING_FOCUS_HIDDEN = "focus-hidden";
 
 function _strong(text) {
   return "<b>" + _(text) + "</b>";

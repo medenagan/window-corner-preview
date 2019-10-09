@@ -1,7 +1,6 @@
 "use strict";
 
 // Global modules
-const Lang = imports.lang;
 const St = imports.gi.St;
 const Slider = imports.ui.slider;
 const PopupMenu = imports.ui.popupMenu;
@@ -15,13 +14,7 @@ const Bundle = Me.imports.bundle;
 const normalizeRange = Bundle.normalizeRange;
 const deNormalizeRange = Bundle.deNormalizeRange;
 
-/*
-var PopupSliderMenuItem = new Lang.Class({
-    Name: "WindowCornerPreview.PopupSliderMenuItem",
-    Extends: PopupMenu.PopupBaseMenuItem,
-*/
-
-var PopupSliderMenuItem = class extends PopupMenu.PopupBaseMenuItem {
+var PopupSliderMenuItem = class PopupSliderMenuItem extends PopupMenu.PopupBaseMenuItem {
 
     constructor(text, value, min, max, step, params) {
 
@@ -45,14 +38,14 @@ var PopupSliderMenuItem = class extends PopupMenu.PopupBaseMenuItem {
         this.value = this.defaultValue;
 
         // PopupSliderMenuItem emits its own value-change event which provides a normalized value
-        this.slider.connect("value-changed", Lang.bind(this, function(x) {
+        this.slider.connect("value-changed", (x) => {
             let normalValue = this.value;
             // Force the slider to set position on a stepped value (if necessary)
             if (this.step !== undefined) this.value = normalValue;
             // Don't through any event if step rounded it to the same value
             if (normalValue !== this._lastValue) this.emit("value-changed", normalValue);
             this._lastValue = normalValue;
-        }));
+        });
 
         this.actor.add(this.slider.actor, {
             expand: true,

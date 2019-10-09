@@ -96,7 +96,7 @@ function previewLastWindow(preview) {
             // I don't know exactly the reason, but some windows
             // do not get shown properly without putting this on async
             // The thumbnail seems not to be ready yet
-            Mainloop.timeout_add(100, function () {
+            Mainloop.timeout_add(100, () => {
                 preview.window = anyWindow;
                 preview.show();
             });
@@ -108,20 +108,20 @@ function previewLastWindow(preview) {
     // the array is already filled
     const windows = getMetawindows();
     if (windows.length) {
-        windows.forEach(function (window) {
+        windows.forEach((window) => {
             shouldBePreviewed(window);
         });
     }
     else {
 
-        getWorkspaces().forEach(function (workspace) {
-            signals.tryConnectAfter(workspace, "window-added", function (workspace, window) {
+        getWorkspaces().forEach((workspace) => {
+            signals.tryConnectAfter(workspace, "window-added", (workspace, window) => {
                 shouldBePreviewed(window);
             });
         });
 
         const TIMEOUT = 10000;
-        timer = Mainloop.timeout_add(TIMEOUT, function () {
+        timer = Mainloop.timeout_add(TIMEOUT, () => {
             // In case the last window previewed could not be found, stop listening
             done = true;
             signals.disconnectAll();

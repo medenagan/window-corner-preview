@@ -1,13 +1,8 @@
 "use strict";
 
-// Global modules
-const Lang = imports.lang;
+var Rectangle = class Rectangle {
 
-var Rectangle = new Lang.Class({
-
-    Name: "WindowCornerPreview.Rectangle",
-
-    _init: function() {
+    constructor() {
         let x0 = 0, y0 = 0;
         let x1 = 0, y1 = 0;
 
@@ -45,9 +40,9 @@ var Rectangle = new Lang.Class({
         this._x1 = x1;
         this._y0 = y0;
         this._y1 = y1;
-    },
+    }
 
-    offset: function() {
+    offset() {
         let dX = 0, dY = 0;
 
         if (arguments.length > 1) {
@@ -63,58 +58,58 @@ var Rectangle = new Lang.Class({
         this._y0 += dY;
         this._x1 += dX;
         this._y1 += dY;
-    },
+    }
 
-    move: function(x, y) {
+    move(x, y) {
         this._x1 += x - this._x0;
         this._y1 += y - this._y0;
         this._x0 = x;
         this._y0 = y;
-    },
+    }
 
-    toString: function() {
+    toString() {
         return "Rectangle(" +
             (+this._x0) + ", " +
             (+this._y0) + ")-(" +
             (+this._x1) + ", " +
             (+this._y1) + ")";
-    },
+    }
 
-    getXY: function() {
+    getXY() {
         return [this._x0, this._y0, this._x1, this._y1];
-    },
+    }
 
-    isPointInside: function (x, y) {
+    isPointInside (x, y) {
         return (
             x >= this._x0 &&
             x <= this._x1 &&
             y >= this._y0 &&
             y <= this._y1
         );
-    },
+    }
 
     get width() {
         return Math.abs(this._x0 - this._x1);
-    },
+    }
 
     get height() {
         return Math.abs(this._y0 - this._y1);
-    },
+    }
 
     get x0() {
         return this._x0;
-    },
+    }
 
     get y0() {
         return this._y0;
-    },
+    }
 
     get x1() {
         return this._x1;
-    },
+    }
 
     get y1() {
         return this._y1;
     }
 
-});
+}

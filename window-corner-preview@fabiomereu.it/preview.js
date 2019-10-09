@@ -1,7 +1,6 @@
 "use strict";
 
 // Global modules
-const Lang = imports.lang;
 const Main = imports.ui.main;
 const St = imports.gi.St;
 const Tweener = imports.ui.tweener;
@@ -66,11 +65,9 @@ const BEHAVIOR_AUTOHIDE = "autohide";
 const BEHAVIOR_LIST = [BEHAVIOR_SEETHROUGH, BEHAVIOR_AUTOHIDE];
 const DEFAULT_BEHAVIOR = BEHAVIOR_SEETHROUGH;
 
-var WindowCornerPreview = new Lang.Class({
+var WindowCornerPreview = class WindowCornerPreview {
 
-    Name: "WindowCornerPreview.preview",
-
-    _init: function() {
+    constructor() {
 
         this._corner = DEFAULT_CORNER;
         this._zoom = DEFAULT_ZOOM;
@@ -93,9 +90,9 @@ var WindowCornerPreview = new Lang.Class({
         this._environmentSignals = new SignalConnector();
 
         this._outsideArea = new SensitiveArea();
-    },
+    }
 
-    _onClick: function(actor, event) {
+    _onClick(actor, event) {
         let button = event.get_button();
         let state = event.get_state();
 
@@ -120,9 +117,9 @@ var WindowCornerPreview = new Lang.Class({
             }
             this.emit("corner-changed");
         }
-    },
+    }
 
-    _getRectangle: function() {
+    _getRectangle() {
         if (! this._container)
             return new Rectangle();
 
@@ -130,9 +127,9 @@ var WindowCornerPreview = new Lang.Class({
         const [width, height] = this._container.get_transformed_size();
 
         return new Rectangle(x, y, width, height);
-    },
+    }
 
-    _onScroll: function(actor, event) {
+    _onScroll(actor, event) {
         let scroll_direction = event.get_scroll_direction();
 
         let direction;
@@ -216,9 +213,9 @@ var WindowCornerPreview = new Lang.Class({
             this[deltaMinimum.property] += deltaMinimum.direction * SCROLL_CROP_STEP;
             this.emit("crop-changed");
         }
-    },
+    }
 
-    _onEnter: function(actor, event) {
+    _onEnter(actor, event) {
         let [x, y, state] = global.get_pointer();
 
         // SHIFT: ignore standard behavior
@@ -242,9 +239,9 @@ var WindowCornerPreview = new Lang.Class({
                 transition: "easeOutQuad"
             });
         }
-    },
+    }
 
-    _onLeave: function() {
+    _onLeave() {
 
         if (this._behaviorMode === BEHAVIOR_AUTOHIDE) {
             this._autohidden = false;
@@ -257,21 +254,21 @@ var WindowCornerPreview = new Lang.Class({
                 transition: "easeOutQuad"
             });
         }
-    },
+    }
 
-    _onParamsChange: function() {
+    _onParamsChange() {
         // Zoom or crop properties changed
         if (this.enabled) this._setThumbnail();
-    },
+    }
 
-    _onWindowUnmanaged: function() {
+    _onWindowUnmanaged() {
         this.disable();
         this._window = null;
         // gnome-shell --replace will cause this event too
         this.emit("window-changed", null);
-    },
+    }
 
-    _adjustVisibility: function(options) {
+    _adjustVisibility(options) {
         options = options || {};
 
         /*
@@ -337,34 +334,34 @@ var WindowCornerPreview = new Lang.Class({
                 opacity: calculatedOpacity,
                 time: TWEEN_TIME_SHORT,
                 transition: "easeOutQuad",
-                onComplete: Lang.bind(this, function() {
+                onComplete: () => {
                     this._container.visible = calculatedVisibility;
                     this._container.reactive = true;
                     if (options.onComplete) options.onComplete();
-                })
+                }
             });
         }
-    },
+    }
 
-    _onNotifyFocusWindow: function() {
+    _onNotifyFocusWindow() {
         this._adjustVisibility();
-    },
+    }
 
-    _onOverviewShowing: function() {
+    _onOverviewShowing() {
         this._adjustVisibility();
-    },
+    }
 
-    _onOverviewHiding: function() {
+    _onOverviewHiding() {
         this._adjustVisibility();
-    },
+    }
 
-    _onMonitorsChanged: function() {
+    _onMonitorsChanged() {
         // TODO multiple monitors issue, the preview doesn't stick to the right monitor
         log("Monitors changed");
-    },
+    }
 
     // Align the preview along the chrome area
-    _setPosition: function() {
+    _setPosition() {
 
         if (! this._container) {
             return;
@@ -403,10 +400,10 @@ var WindowCornerPreview = new Lang.Class({
                 posY = rectChrome.y1;
         }
         this._container.set_position(posX, posY);
-    },
+    }
 
     // Create a window thumbnail and adds it to the container
-    _setThumbnail: function() {
+    _setThumbnail() {
 
         if (! this._container) return;
 
@@ -490,7 +487,7 @@ var WindowCornerPreview = new Lang.Class({
         this._container.add_actor(thumbnail);
 
         this._setPosition();
-    },
+    }
 
     // xCrop properties normalize their opposite counterpart, so that margins won't ever overlap
     set leftCrop(value) {
@@ -499,59 +496,59 @@ var WindowCornerPreview = new Lang.Class({
         // Decrease the opposite margin if necessary
         this._rightCrop = Math.min(this._rightCrop, MAX_CROP_RATIO - this._leftCrop);
         this._onParamsChange();
-    },
+    }
 
     set rightCrop(value) {
         this._rightCrop = Math.min(MAX_CROP_RATIO, Math.max(0.0, value));
         this._leftCrop = Math.min(this._leftCrop, MAX_CROP_RATIO - this._rightCrop);
         this._onParamsChange();
-    },
+    }
 
     set topCrop(value) {
         this._topCrop = Math.min(MAX_CROP_RATIO, Math.max(0.0, value));
         this._bottomCrop = Math.min(this._bottomCrop, MAX_CROP_RATIO - this._topCrop);
         this._onParamsChange();
-    },
+    }
 
     set bottomCrop(value) {
         this._bottomCrop = Math.min(MAX_CROP_RATIO, Math.max(0.0, value));
         this._topCrop = Math.min(this._topCrop, MAX_CROP_RATIO - this._bottomCrop);
         this._onParamsChange();
-    },
+    }
 
     get leftCrop() {
         return this._leftCrop;
-    },
+    }
 
     get rightCrop() {
         return this._rightCrop;
-    },
+    }
 
     get topCrop() {
         return this._topCrop;
-    },
+    }
 
     get bottomCrop() {
         return this._bottomCrop;
-    },
+    }
 
     set zoom(value) {
         this._zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
         this._onParamsChange();
-    },
+    }
 
     get zoom() {
         return this._zoom;
-    },
+    }
 
     set focusHidden(value) {
         this._focusHidden = !!value;
         this._adjustVisibility();
-    },
+    }
 
     get focusHidden() {
         return this._focusHidden;
-    },
+    }
 
     set behaviorMode(value) {
         if (BEHAVIOR_LIST.indexOf(value) > -1) {
@@ -562,60 +559,60 @@ var WindowCornerPreview = new Lang.Class({
         else {
             logError(new Error(value), "Preview.behaviorMode: type mismatch");
         }
-    },
+    }
 
     get behaviorMode() {
         return this._behaviorMode || DEFAULT_BEHAVIOR;
-    },
+    }
 
     set corner(value) {
         this._corner = (value %= 4) < 0 ? (value + 4) : (value);
         this._setPosition();
-    },
+    }
 
     get corner() {
         return this._corner;
-    },
+    }
 
     get enabled() {
         return !!this._container;
-    },
+    }
 
     get visible() {
         return this._container && this._window && this._naturalVisibility;
-    },
+    }
 
-    show: function(onComplete) {
+    show(onComplete) {
         this._naturalVisibility = true;
         this._adjustVisibility({
             onComplete: onComplete
         });
-    },
+    }
 
-    hide: function(onComplete) {
+    hide(onComplete) {
         this._naturalVisibility = false;
         this._adjustVisibility({
             onComplete: onComplete
         });
-    },
+    }
 
-    toggle: function(onComplete) {
+    toggle(onComplete) {
         this._naturalVisibility = !this._naturalVisibility;
         this._adjustVisibility({
             onComplete: onComplete
         });
-    },
+    }
 
-    passAway: function() {
+    passAway() {
         this._naturalVisibility = false;
         this._adjustVisibility({
-            onComplete: Lang.bind(this, this.disable)
+            onComplete: () => this.disable()
         });
-    },
+    }
 
     get window() {
         return this._window;
-    },
+    }
 
     set window(metawindow) {
 
@@ -626,28 +623,28 @@ var WindowCornerPreview = new Lang.Class({
         this._window = metawindow;
 
         if (metawindow) {
-            this._windowSignals.tryConnect(metawindow, "unmanaged", Lang.bind(this, this._onWindowUnmanaged));
+            this._windowSignals.tryConnect(metawindow, "unmanaged", (...params) => this._onWindowUnmanaged(...params));
             // Version 3.10 does not support size-changed
-            this._windowSignals.tryConnect(metawindow, "size-changed", Lang.bind(this, this._setThumbnail));
-            this._windowSignals.tryConnect(metawindow, "notify::maximized-vertically", Lang.bind(this, this._setThumbnail));
-            this._windowSignals.tryConnect(metawindow, "notify::maximized-horizontally", Lang.bind(this, this._setThumbnail));
+            this._windowSignals.tryConnect(metawindow, "size-changed", (...params) => this._setThumbnail(...params));
+            this._windowSignals.tryConnect(metawindow, "notify::maximized-vertically", (...params) => this._setThumbnail(...params));
+            this._windowSignals.tryConnect(metawindow, "notify::maximized-horizontally", (...params) => this._setThumbnail(...params));
         }
 
         this._setThumbnail();
 
         this.emit("window-changed", metawindow);
-    },
+    }
 
-    enable: function() {
+    enable() {
 
         if (this._container) return;
 
         let isSwitchingWindow = this.enabled;
 
-        this._environmentSignals.tryConnect(Main.overview, "showing", Lang.bind(this, this._onOverviewShowing));
-        this._environmentSignals.tryConnect(Main.overview, "hiding", Lang.bind(this, this._onOverviewHiding));
-        this._environmentSignals.tryConnect(global.display, "notify::focus-window", Lang.bind(this, this._onNotifyFocusWindow));
-        this._environmentSignals.tryConnect(DisplayWrapper.getMonitorManager(), "monitors-changed", Lang.bind(this, this._onMonitorsChanged));
+        this._environmentSignals.tryConnect(Main.overview, "showing", (...params) => this._onOverviewShowing(...params));
+        this._environmentSignals.tryConnect(Main.overview, "hiding", (...params) => this._onOverviewHiding(...params));
+        this._environmentSignals.tryConnect(global.display, "notify::focus-window", (...params) => this._onNotifyFocusWindow(...params));
+        this._environmentSignals.tryConnect(DisplayWrapper.getMonitorManager(), "monitors-changed", (...params) => this._onMonitorsChanged(...params));
 
         this._container = new St.Button({
             style_class: "window-corner-preview"
@@ -655,12 +652,12 @@ var WindowCornerPreview = new Lang.Class({
         // Force content not to overlap, allowing cropping
         this._container.set_clip_to_allocation(true);
 
-        this._container.connect("enter-event", Lang.bind(this, this._onEnter));
-        this._container.connect("leave-event", Lang.bind(this, this._onLeave));
-        this._outsideArea.connect("enter-event", Lang.bind(this, this._onLeave));
+        this._container.connect("enter-event", (...params) => this._onEnter(...params));
+        this._container.connect("leave-event", (...params) => this._onLeave(...params));
+        this._outsideArea.connect("enter-event", (...params) => this._onLeave(...params));
         // Don't use button-press-event, as set_position conflicts and Gtk would react for enter and leave event of ANY item on the chrome area
-        this._container.connect("button-release-event", Lang.bind(this, this._onClick));
-        this._container.connect("scroll-event", Lang.bind(this, this._onScroll));
+        this._container.connect("button-release-event", (...params) => this._onClick(...params));
+        this._container.connect("scroll-event", (...params) => this._onScroll(...params));
 
         this._container.visible = false;
         Main.layoutManager.addChrome(this._container);
@@ -669,9 +666,9 @@ var WindowCornerPreview = new Lang.Class({
         // this._adjustVisibility({
         //      noAnimate: isSwitchingWindow
         // });
-    },
+    }
 
-    disable: function() {
+    disable() {
 
         this._windowSignals.disconnectAll();
         this._environmentSignals.disconnectAll();
@@ -683,6 +680,6 @@ var WindowCornerPreview = new Lang.Class({
         this._container.destroy();
         this._container = null;
     }
-})
+}
 
 Signals.addSignalMethods(WindowCornerPreview.prototype);

@@ -418,7 +418,7 @@ var WindowCornerPreview = class WindowCornerPreview {
         if (! mutw) return;
 
         let windowTexture = mutw.get_texture();
-        let [windowWidth, windowHeight] = windowTexture.get_size();
+        let [windowWidth, windowHeight] = mutw.get_size();
 
         /* To crop the window texture, for now I've found that:
            1. Using a clip rect on Clutter.clone will hide the outside portion but also will KEEP the space along it
@@ -461,8 +461,8 @@ var WindowCornerPreview = class WindowCornerPreview {
             this._zoom = windowWidth / rectMonitor.width; // do NOT set this.zoom (the encapsulated prop for _zoom) or it will be looping!
         }
 
-        let thumbnail = new Clutter.Clone({ // list parameters https://www.roojs.org/seed/gir-1.2-gtk-3.0/seed/Clutter.Clone.html
-            source: windowTexture,
+        let thumbnail = new Clutter.Actor({ // list parameters https://gjs-docs.gnome.org/clutter4~4_api/clutter.actor#index-properties
+            content: windowTexture,
             reactive: false,
 
             magnification_filter: Clutter.ScalingFilter.NEAREST, //NEAREST, //TRILINEAR,

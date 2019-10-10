@@ -4,17 +4,15 @@
 // Global modules
 const Meta = imports.gi.Meta;
 
-// This is wrapper to maintain compatibility with GNOME-Shell 3.30+ as well as
-// previous versions.
 var DisplayWrapper = {
     getScreen() {
-        return global.screen || global.display;
+        return global.display;
     },
     getWorkspaceManager() {
-        return global.screen || global.workspace_manager;
+        return global.workspace_manager;
     },
     getMonitorManager() {
-        return global.screen || Meta.MonitorManager.get();
+        return Meta.MonitorManager.get();
     }
 };
 

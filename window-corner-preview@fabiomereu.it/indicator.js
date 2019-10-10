@@ -105,8 +105,8 @@ var WindowCornerIndicator = GObject.registerClass(class WindowCornerIndicator ex
     // Update windows list and other menus before menu pops up
     _onUserTriggered() {
         this.menuIsEnabled.setToggleState(this.preview.visible);
-        this.menuIsEnabled.actor.reactive = this.preview.window;
-        this.menuActivate.actor.visible = this.preview.visible;
+        this.menuIsEnabled.reactive = this.preview.window;
+        this.menuActivate.visible = this.preview.visible;
         this.menuActivate.label.set_text(
             ["◪", "⬕", "◩", "⬔"][this.preview.corner] + " " +
             spliceTitle(this.preview.window && this.preview.window.get_title())
@@ -154,7 +154,7 @@ var WindowCornerIndicator = GObject.registerClass(class WindowCornerIndicator ex
             icon_name: "face-monkey-symbolic",
             style_class: "system-status-icon"
         });
-        this.actor.add_actor(this.icon);
+        this.add_actor(this.icon);
 
         // Prepare Menu...
 
@@ -241,7 +241,7 @@ var WindowCornerIndicator = GObject.registerClass(class WindowCornerIndicator ex
         this.menuSettings.connect("activate", (...params) => this._onSettings(...params));
         this.menu.addMenuItem(this.menuSettings);
 
-        this.actor.connect("enter-event", (...params) => this._onUserTriggered(...params));
+        this.connect("enter-event", (...params) => this._onUserTriggered(...params));
 
     }
 

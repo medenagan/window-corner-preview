@@ -95,7 +95,7 @@ var WindowCornerPreviewPrefsWidget = GObject.registerClass(class WindowCornerPre
             "<i>Keep pressed</i> <b>SHIFT</b> <i>to prevent it from disappearing</i>",
             "<i>Use</i> <b>LEFT</b>, <b>MIDDLE</b> <i>or</i> <b>RIGHT</b> <i>button to move it</i>",
             "<b>SHIFT</b> + <b>CLICK</b> <i>to activate the mirrored window</i>",
-            "<u><i>" + Me.metadata.url + "</i></u>" // github
+            `<a href="${Me.metadata.url}">${Me.metadata.url}</a>` // github
         ].forEach((label) => {
             this.add(new Gtk.Label({
                 label: label,

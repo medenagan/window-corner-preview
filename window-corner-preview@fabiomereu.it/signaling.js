@@ -1,18 +1,13 @@
 "use strict";
 
-// Global modules
-const Lang = imports.lang;
-
 // Helper to disconnect more signals at once
-var SignalConnector = new Lang.Class({
+var SignalConnector = class SignalConnector {
 
-    Name: "WindowCornerPreview.SignalConnector",
-
-    _init: function() {
+    constructor() {
         this._connections = [];
-    },
+    }
 
-    tryConnect: function(actor, signal, callback) {
+    tryConnect(actor, signal, callback) {
         try {
             let handle = actor.connect(signal, callback);
             this._connections.push({
@@ -24,9 +19,9 @@ var SignalConnector = new Lang.Class({
         catch (e) {
             logError(e, "SignalConnector.tryConnect failed");
         }
-    },
+    }
 
-    tryConnectAfter: function(actor, signal, callback) {
+    tryConnectAfter(actor, signal, callback) {
         try {
             let handle = actor.connect_after(signal, callback);
             this._connections.push({
@@ -38,9 +33,9 @@ var SignalConnector = new Lang.Class({
         catch (e) {
             logError(e, "SignalConnector.tryConnectAfter failed");
         }
-    },
+    }
 
-    disconnectAll: function() {
+    disconnectAll() {
         for (let i = 0; i < this._connections.length; i++) {
             try {
                 let connection = this._connections[i];
@@ -54,4 +49,4 @@ var SignalConnector = new Lang.Class({
         }
         this._connections = [];
     }
-});
+}

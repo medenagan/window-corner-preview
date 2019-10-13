@@ -1,7 +1,7 @@
 "use strict";
 
 // Global modules
-const Lang = imports.lang;
+const GObject = imports.gi.GObject;
 const St = imports.gi.St;
 const Slider = imports.ui.slider;
 const PopupMenu = imports.ui.popupMenu;
@@ -15,17 +15,15 @@ const Bundle = Me.imports.bundle;
 const normalizeRange = Bundle.normalizeRange;
 const deNormalizeRange = Bundle.deNormalizeRange;
 
-/*
-var PopupSliderMenuItem = new Lang.Class({
-    Name: "WindowCornerPreview.PopupSliderMenuItem",
-    Extends: PopupMenu.PopupBaseMenuItem,
-*/
+var PopupSliderMenuItem = GObject.registerClass({
+    Signals: {
+        'value-changed': { param_types: [GObject.TYPE_DOUBLE] }
+    },
+}, class PopupSliderMenuItem extends PopupMenu.PopupBaseMenuItem {
 
-var PopupSliderMenuItem = class extends PopupMenu.PopupBaseMenuItem {
+    _init(text, value, min, max, step, params) {
 
-    constructor(text, value, min, max, step, params) {
-
-        super(Object.assign({}, params, {activate: false}));
+        super._init(Object.assign({}, params, {activate: false}));
 
         this.min = (min !== undefined ? min : 0.0);
         this.max = (max !== undefined ? max : 1.0);
@@ -38,23 +36,24 @@ var PopupSliderMenuItem = class extends PopupMenu.PopupBaseMenuItem {
             text: text || ""
         });
         // Setting text to false allow a little bit extra space on the left
-        if (text !== false) this.actor.add_child(this.label);
-        this.actor.label_actor = this.label;
+        if (text !== false) this.add_child(this.label);
+        this.label_actor = this.label;
 
         this.slider = new Slider.Slider(0.0);
         this.value = this.defaultValue;
 
         // PopupSliderMenuItem emits its own value-change event which provides a normalized value
-        this.slider.connect("value-changed", Lang.bind(this, function(x) {
+        this.slider.connect("notify::value", (x) => {
             let normalValue = this.value;
             // Force the slider to set position on a stepped value (if necessary)
-            if (this.step !== undefined) this.value = normalValue;
+            // TODO: prevent event handler loop
+            // if (this.step !== undefined) this.value = normalValue;
             // Don't through any event if step rounded it to the same value
             if (normalValue !== this._lastValue) this.emit("value-changed", normalValue);
             this._lastValue = normalValue;
-        }));
+        });
 
-        this.actor.add(this.slider.actor, {
+        this.add(this.slider, {
             expand: true,
             align: St.Align.END
         });
@@ -66,6 +65,6 @@ var PopupSliderMenuItem = class extends PopupMenu.PopupBaseMenuItem {
 
     set value(newValue) {
         this._lastValue = normalizeRange(newValue, this.min, this.max, this.step);
-        this.slider.setValue(this._lastValue);
+        this.slider.value = this._lastValue;
     }
-}
+});

@@ -12,15 +12,13 @@ const Shape = Me.imports.shape;
 
 const Rectangle = Shape.Rectangle;
 
-var Area = new Lang.Class({
+var Area = class Area {
 
-    Name: "WindowCornerPreview.SensitiveArea",
-
-    _init: function() {
+    constructor() {
         // Hi
-    },
+    }
 
-    _onPointerChange: function(x, y) {
+    _onPointerChange(x, y) {
         if (! this._tester) {
             return;
         }
@@ -38,11 +36,11 @@ var Area = new Lang.Class({
             this.emit("leave-event");
         }
         this._lastPosition = position;
-    },
+    }
 
     get tester() {
         return this._tester;
-    },
+    }
 
     set tester(fn) {
         // Area.tester = (x, y) => true|false
@@ -63,7 +61,7 @@ var Area = new Lang.Class({
                 const IDLE = 100;
                 this._watch = PointerWatcher.
                     getPointerWatcher().
-                    addWatch(IDLE, Lang.bind(this, this._onPointerChange));
+                    addWatch(IDLE, (...params) => this._onPointerChange(...params));
                 // Force first event
                 this._lastPosition = false;
                 const [x, y] = global.get_pointer();
@@ -75,6 +73,6 @@ var Area = new Lang.Class({
             throw new Error("Sensitive.Area.tester requires either a function or null");
         }
     }
-});
+}
 
 Signals.addSignalMethods(Area.prototype);

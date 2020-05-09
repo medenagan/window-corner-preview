@@ -15,6 +15,12 @@ const Bundle = Me.imports.bundle;
 const normalizeRange = Bundle.normalizeRange;
 const deNormalizeRange = Bundle.deNormalizeRange;
 
+const Signals = imports.signals;
+
+class EventSource {}
+Signals.addSignalMethods(EventSource.prototype);
+
+
 var PopupSliderMenuItem = new Lang.Class({
     Name: "WindowCornerPreview.PopupSliderMenuItem",
     Extends: PopupMenu.PopupBaseMenuItem,
@@ -30,6 +36,8 @@ var PopupSliderMenuItem = new Lang.Class({
         params = params || {};
 
         params.activate = false;
+        
+        this._streamEvents = new EventSource();
 
         this.parent(params);
 
@@ -44,12 +52,14 @@ var PopupSliderMenuItem = new Lang.Class({
         this.value = this.defaultValue;
 
         // PopupSliderMenuItem emits its own value-change event which provides a normalized value
-        this.slider.connect("value-changed", Lang.bind(this, function(x) {
+        this.slider.connect("notify::value", Lang.bind(this, function(x) {
             let normalValue = this.value;
             // Force the slider to set position on a stepped value (if necessary)
             if (this.step !== undefined) this.value = normalValue;
             // Don't through any event if step rounded it to the same value
-            if (normalValue !== this._lastValue) this.emit("value-changed", normalValue);
+            if (normalValue !== this._lastValue) {
+                this._streamEvents.emit("notify::value", normalValue);
+            }
             this._lastValue = normalValue;
         }));
 
@@ -65,6 +75,6 @@ var PopupSliderMenuItem = new Lang.Class({
 
     set value(newValue) {
         this._lastValue = normalizeRange(newValue, this.min, this.max, this.step);
-        this.slider.setValue(this._lastValue);
+        this.slider.value = this._lastValue;
     }
 });

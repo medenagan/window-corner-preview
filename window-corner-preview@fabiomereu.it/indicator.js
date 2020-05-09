@@ -142,7 +142,7 @@ var WindowCornerIndicator = new Lang.Class({
 
         // 3b, Zoom slider
         this.menuZoom = new PopupSliderMenuItem(false, DEFAULT_ZOOM, MIN_ZOOM, MAX_ZOOM, 0.005); // slider step: 0.5%
-        this.menuZoom.connect("value-changed", Lang.bind(this, this._onZoomChanged));
+        this.menuZoom._streamEvents.connect("notify::value", Lang.bind(this, this._onZoomChanged));
         this.menu.addMenuItem(this.menuZoom);
 
         // 4. Crop Sliders
@@ -150,19 +150,19 @@ var WindowCornerIndicator = new Lang.Class({
         this.menu.addMenuItem(this.menuCrop);
 
         this.menuTopCrop = new PopupSliderMenuItem("Top", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuTopCrop.connect("value-changed", Lang.bind(this, this._onTopCropChanged));
+        this.menuTopCrop._streamEvents.connect("notify::value", Lang.bind(this, this._onTopCropChanged));
         this.menuCrop.menu.addMenuItem(this.menuTopCrop);
-
+        
         this.menuLeftCrop = new PopupSliderMenuItem("Left", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuLeftCrop.connect("value-changed", Lang.bind(this, this._onLeftCropChanged));
+        this.menuLeftCrop._streamEvents.connect("notify::value", Lang.bind(this, this._onLeftCropChanged));
         this.menuCrop.menu.addMenuItem(this.menuLeftCrop);
-
+        
         this.menuRightCrop = new PopupSliderMenuItem("Right", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuRightCrop.connect("value-changed", Lang.bind(this, this._onRightCropChanged));
+        this.menuRightCrop._streamEvents.connect("notify::value", Lang.bind(this, this._onRightCropChanged));
         this.menuCrop.menu.addMenuItem(this.menuRightCrop);
-
+        
         this.menuBottomCrop = new PopupSliderMenuItem("Bottom", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuBottomCrop.connect("value-changed", Lang.bind(this, this._onBottomCropChanged));
+        this.menuBottomCrop._streamEvents.connect("notify::value", Lang.bind(this, this._onBottomCropChanged));
         this.menuCrop.menu.addMenuItem(this.menuBottomCrop);
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 

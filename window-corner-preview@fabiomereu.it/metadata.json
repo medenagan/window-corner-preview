@@ -5,19 +5,9 @@
   "settings-schema": "org.gnome.shell.extensions.window-corner-preview",
   "gettext-domain": "gnome-shell-extensions",
   "shell-version": [
-    "3.10",
-    "3.12",
-    "3.14",
-    "3.16",
-    "3.18",
-    "3.20",
-    "3.22",
-    "3.24",
-    "3.26",
-    "3.28",
-    "3.30"
+    "3.36"
   ],
   "url": "https://github.com/medenagan/window-corner-preview",
   "uuid": "window-corner-preview@fabiomereu.it",
-  "version": 3
+  "version": 4.1
 }

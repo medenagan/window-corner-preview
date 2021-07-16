@@ -141,28 +141,23 @@ var WindowCornerIndicator = new Lang.Class({
         this.menu.addMenuItem(this.menuZoomLabel);
 
         // 3b, Zoom slider
-        this.menuZoom = new PopupSliderMenuItem(false, DEFAULT_ZOOM, MIN_ZOOM, MAX_ZOOM, 0.005); // slider step: 0.5%
-        this.menuZoom.connect("value-changed", Lang.bind(this, this._onZoomChanged));
+        this.menuZoom = new PopupSliderMenuItem(Lang.bind(this, this._onZoomChanged), false, DEFAULT_ZOOM, MIN_ZOOM, MAX_ZOOM, 0.005); // slider step: 0.5%
         this.menu.addMenuItem(this.menuZoom);
 
         // 4. Crop Sliders
         this.menuCrop = new PopupMenu.PopupSubMenuMenuItem("Crop");
         this.menu.addMenuItem(this.menuCrop);
 
-        this.menuTopCrop = new PopupSliderMenuItem("Top", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuTopCrop.connect("value-changed", Lang.bind(this, this._onTopCropChanged));
+        this.menuTopCrop = new PopupSliderMenuItem(Lang.bind(this, this._onTopCropChanged), "Top", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
         this.menuCrop.menu.addMenuItem(this.menuTopCrop);
 
-        this.menuLeftCrop = new PopupSliderMenuItem("Left", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuLeftCrop.connect("value-changed", Lang.bind(this, this._onLeftCropChanged));
+        this.menuLeftCrop = new PopupSliderMenuItem(Lang.bind(this, this._onLeftCropChanged), "Left", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
         this.menuCrop.menu.addMenuItem(this.menuLeftCrop);
 
-        this.menuRightCrop = new PopupSliderMenuItem("Right", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuRightCrop.connect("value-changed", Lang.bind(this, this._onRightCropChanged));
+        this.menuRightCrop = new PopupSliderMenuItem(Lang.bind(this, this._onRightCropChanged), "Right", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
         this.menuCrop.menu.addMenuItem(this.menuRightCrop);
 
-        this.menuBottomCrop = new PopupSliderMenuItem("Bottom", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
-        this.menuBottomCrop.connect("value-changed", Lang.bind(this, this._onBottomCropChanged));
+        this.menuBottomCrop = new PopupSliderMenuItem(Lang.bind(this, this._onBottomCropChanged), "Bottom", DEFAULT_CROP_RATIO, 0.0, MAX_CROP_RATIO);
         this.menuCrop.menu.addMenuItem(this.menuBottomCrop);
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
